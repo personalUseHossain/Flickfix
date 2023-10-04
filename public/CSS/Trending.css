@@ -1,0 +1,16 @@
+.trending{
+    display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 4rem;
+      overflow-x: hidden;
+  }
+  .movie-title {
+    font-size: 1.5rem; /* Adjust the font size as needed */
+    max-width: 100%; /* Allow the title to take up the available width */
+    white-space: nowrap; /* Prevent line breaks */
+    overflow: hidden; /* Hide any overflowing text */
+    text-overflow: ellipsis; /* Add an ellipsis (...) for long titles */
+  }
+  .movie-overview{
+    text-overflow: ellipsis;
+  }

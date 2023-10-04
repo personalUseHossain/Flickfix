@@ -1,0 +1,24 @@
+
+  /* .hero-image-slider-container:first-child .slider-content {
+    padding-left: 2rem;
+  } 
+  .hero-image-slider-container .slider-content:not(){
+    padding-left: 4rem;
+  } */
+
+
+
+  /* @media (width < 779px) {
+    .hero-image-slider-container > *:not(:first-child){
+      padding-left: 2rem;
+    }
+    .hero-image-slider-container:first-child .slider-content{
+      padding-left: 0;
+    }
+  } */
+
+@media (width < 647px) {
+    .hero-section-image-slider{
+        top: 1rem;
+    }
+}
