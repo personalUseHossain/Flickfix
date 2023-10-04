@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext } from "react";
 import { MyContext } from "../layout";
 
-export default function page() {
+export default function Page() {
   const { isSideBarOpen } = useContext(MyContext);
   return (
     <div

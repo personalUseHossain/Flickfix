@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import "@/public/CSS/SingleMovie.css";
 
-export default function page(id) {
+export default function Page(id) {
   const requested_id = id.params.id;
   const details = id.searchParams.details;
   console.log(id);
