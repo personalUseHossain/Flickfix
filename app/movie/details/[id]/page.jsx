@@ -1,18 +1,23 @@
 "use client";
 import { faStar, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import "@/public/CSS/SingleMovie.css";
+import Credit from "@/component/Credit";
+import Recomended from "@/component/Recomended";
+import { MyContext } from "@/app/layout";
 
 export default function Page(id) {
   const requested_id = id.params.id;
   const details = id.searchParams.details;
+  console.log(id);
+  const { isSideBarOpen } = useContext(MyContext);
   const [movieDetails, setMovieDetails] = useState({}); // Initialize as an empty object
 
   async function fetchData() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/${details}/${requested_id}?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/tv/${requested_id}?api_key=db9fc15e4392ee900f12fcb5246c12bf`
     );
     const res = await req.json();
     setMovieDetails((prevDetails) => ({
@@ -23,27 +28,58 @@ export default function Page(id) {
 
   async function getMovieVideo() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/movie/${requested_id}/videos?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/tv/${requested_id}/videos?api_key=db9fc15e4392ee900f12fcb5246c12bf`
     );
     const res = await req.json();
+    console.log(res);
     let video = res.results.filter((video) => {
       return video.type == "Trailer";
     });
+
     video = video[0];
     setMovieDetails((prevDetails) => ({
       ...prevDetails,
       video,
     }));
   }
+  async function recomended() {
+    const req = await fetch(
+      `https://api.themoviedb.org/3/tv/${requested_id}/recommendations?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+    );
+    const res = await req.json();
+
+    setMovieDetails((prevDetails) => ({
+      ...prevDetails,
+      recomended: res.results,
+    }));
+  }
+  async function getCredits() {
+    const req = await fetch(
+      `https://api.themoviedb.org/3/tv/${requested_id}/aggregate_credits?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+    );
+    const res = await req.json();
+    // const credit = res.cast;
+    setMovieDetails((prevDetails) => ({
+      ...prevDetails,
+      credit: res.cast,
+    }));
+  }
 
   useEffect(() => {
     fetchData();
     getMovieVideo();
+    getCredits();
+    recomended();
   }, []);
 
-  console.log(movieDetails);
   return (
-    <div className="movie_container bg-slate-950 text-white">
+    <div
+      className={
+        (isSideBarOpen &&
+          " movie_container bg-slate-950 text-white sidebaropen  overflow-hidden") ||
+        " movie_container bg-slate-950 text-white overflow-hidden"
+      }
+    >
       <div className="inner_movie_container">
         <div className="flex gap-10 items-center">
           <h1 className="text-5xl mb-2">{movieDetails.original_title}</h1>
@@ -56,7 +92,7 @@ export default function Page(id) {
         </div>
         <p className="mb-5">{movieDetails.tagline}</p>
         <div className="flex gap-5 mb-5">
-          <p>{movieDetails.release_date}</p>
+          <p>{movieDetails.first_air_date}</p>
           <p>
             <FontAwesomeIcon className="text-yellow-400" icon={faStar} />{" "}
             {movieDetails.vote_average}
@@ -73,12 +109,28 @@ export default function Page(id) {
             }
             alt="Movie Image"
           />
-          <ReactPlayer
-            className="movie_video"
-            url={`https://www.youtube.com/watch?v=${
-              movieDetails.video && movieDetails.video.key
-            }`}
-          />
+          {(movieDetails.video && (
+            <>
+              <ReactPlayer
+                className="movie_video"
+                url={`https://www.youtube.com/watch?v=${
+                  movieDetails.video && movieDetails.video.key
+                }`}
+              />
+            </>
+          )) || (
+            <>
+              <img
+                className="movie-video"
+                src={
+                  movieDetails.poster_path
+                    ? `https://image.tmdb.org/t/p/w500/${movieDetails.backdrop_path}`
+                    : "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/fb3ef66312333.5691dd2253378.jpg"
+                }
+                alt="Movie Image"
+              />
+            </>
+          )}
         </div>
         <div className="flex gap-2 mt-5 mb-5 genres">
           {movieDetails.genres &&
@@ -126,29 +178,29 @@ export default function Page(id) {
         >
           Movie Information
         </h1>
-        <div className="grid gap-7">
+        <div className="grid gap-7 ">
           <div className="flex gap-10 p-1 justify-between">
             <b>Language</b>
-            <div className="flex gap-2 mr-5 md:mr-96">
+            <div className="flex gap-2 mr-5">
               {movieDetails.spoken_languages &&
                 movieDetails.spoken_languages.map((lang) => {
                   return <p className=" p-1">{lang.english_name}</p>;
                 })}
             </div>
           </div>
-          <div className="flex gap-10  justify-between mr-5 md:mr-96">
+          <div className="flex gap-10  justify-between mr-5">
             <b>Budget</b>
             <div>
               <p>{movieDetails.budget}$</p>
             </div>
           </div>
-          <div className="flex gap-10  justify-between mr-5 md:mr-96">
+          <div className="flex gap-10  justify-between mr-5">
             <b>Revenue</b>
             <div>
               <p>{movieDetails.revenue}$</p>
             </div>
           </div>
-          <div className="flex gap-10  justify-between mr-5 md:mr-96">
+          <div className="flex gap-10  justify-between mr-5">
             <b>Popularity</b>
             <div>
               <p>
@@ -157,22 +209,8 @@ export default function Page(id) {
             </div>
           </div>
         </div>
-        {/* <div
-        style={{ margin: "1rem 0" }}
-        className="flex gap-10 p-1 items-start md:items-center justify-between"
-      >
-        <b>Prouduction Companies</b>
-        <div className="flex flex-col md:flex-row items-center md:mt-12 gap-5 mr-0 md:mr-96">
-          {movieDetails.production_companies &&
-            movieDetails.production_companies.map((companies) => {
-              return (
-                <div className="flex justify-center items-center">
-                  <p className=" p-1">{companies.name}</p>
-                </div>
-              );
-            })}
-        </div>
-      </div> */}
+        <Credit credit={movieDetails.credit} />
+        <Recomended movies={movieDetails.recomended} />
       </div>
     </div>
   );
