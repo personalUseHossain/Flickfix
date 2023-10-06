@@ -76,7 +76,7 @@ export default function Page() {
           trending.map((movie) => {
             return (
               <>
-                <MovieSingleCard movie={movie} />
+                <MovieSingleCard details="movie" movie={movie} />
               </>
             );
           })}

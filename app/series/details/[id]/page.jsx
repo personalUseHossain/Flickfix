@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import "@/public/CSS/SingleMovie.css";
+import Credit from "@/component/Credit";
+import Recomended from "@/component/Recomended";
 
 export default function Page(id) {
   const requested_id = id.params.id;
@@ -24,25 +26,51 @@ export default function Page(id) {
 
   async function getMovieVideo() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/tv/${requested_id}/videos/?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/tv/${requested_id}/videos?api_key=db9fc15e4392ee900f12fcb5246c12bf`
     );
     const res = await req.json();
+    console.log(res);
     let video = res.results.filter((video) => {
       return video.type == "Trailer";
     });
+
     video = video[0];
     setMovieDetails((prevDetails) => ({
       ...prevDetails,
       video,
     }));
   }
+  async function recomended() {
+    const req = await fetch(
+      `https://api.themoviedb.org/3/tv/${requested_id}/recommendations?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+    );
+    const res = await req.json();
+
+    setMovieDetails((prevDetails) => ({
+      ...prevDetails,
+      recomended: res.results,
+    }));
+  }
+  async function getCredits() {
+    const req = await fetch(
+      `https://api.themoviedb.org/3/tv/${requested_id}/aggregate_credits?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+    );
+    const res = await req.json();
+    // const credit = res.cast;
+    setMovieDetails((prevDetails) => ({
+      ...prevDetails,
+      credit: res.cast,
+    }));
+  }
 
   useEffect(() => {
     fetchData();
     getMovieVideo();
+    getCredits();
+    recomended();
   }, []);
-
   console.log(movieDetails);
+
   return (
     <div className="movie_container bg-slate-950 text-white">
       <div className="inner_movie_container">
@@ -74,12 +102,28 @@ export default function Page(id) {
             }
             alt="Movie Image"
           />
-          <ReactPlayer
-            className="movie_video"
-            url={`https://www.youtube.com/watch?v=${
-              movieDetails.video && movieDetails.video.key
-            }`}
-          />
+          {(movieDetails.video && (
+            <>
+              <ReactPlayer
+                className="movie_video"
+                url={`https://www.youtube.com/watch?v=${
+                  movieDetails.video && movieDetails.video.key
+                }`}
+              />
+            </>
+          )) || (
+            <>
+              <img
+                className="movie-video"
+                src={
+                  movieDetails.poster_path
+                    ? `https://image.tmdb.org/t/p/w500/${movieDetails.backdrop_path}`
+                    : "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/fb3ef66312333.5691dd2253378.jpg"
+                }
+                alt="Movie Image"
+              />
+            </>
+          )}
         </div>
         <div className="flex gap-2 mt-5 mb-5 genres">
           {movieDetails.genres &&
@@ -158,22 +202,8 @@ export default function Page(id) {
             </div>
           </div>
         </div>
-        {/* <div
-        style={{ margin: "1rem 0" }}
-        className="flex gap-10 p-1 items-start md:items-center justify-between"
-      >
-        <b>Prouduction Companies</b>
-        <div className="flex flex-col md:flex-row items-center md:mt-12 gap-5 mr-0 md:mr-96">
-          {movieDetails.production_companies &&
-            movieDetails.production_companies.map((companies) => {
-              return (
-                <div className="flex justify-center items-center">
-                  <p className=" p-1">{companies.name}</p>
-                </div>
-              );
-            })}
-        </div>
-      </div> */}
+        <Credit credit={movieDetails.credit} />
+        <Recomended movies={movieDetails.recomended} />
       </div>
     </div>
   );
