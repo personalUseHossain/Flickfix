@@ -1,0 +1,6 @@
+.credit-container::-webkit-scrollbar{
+    display: none;
+}
+.credit-container{
+    width: 100%;
+}
