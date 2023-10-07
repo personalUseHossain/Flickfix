@@ -1,5 +1,10 @@
 "use client";
-import { faStar, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFilm,
+  faPhotoFilm,
+  faStar,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
 import ReactPlayer from "react-player";
@@ -17,7 +22,7 @@ export default function Page(id) {
 
   async function fetchData() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/tv/${requested_id}?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/movie/${requested_id}?api_key=db9fc15e4392ee900f12fcb5246c12bf`
     );
     const res = await req.json();
     setMovieDetails((prevDetails) => ({
@@ -28,23 +33,24 @@ export default function Page(id) {
 
   async function getMovieVideo() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/tv/${requested_id}/videos?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/movie/${requested_id}/videos?api_key=db9fc15e4392ee900f12fcb5246c12bf`
     );
     const res = await req.json();
-    console.log(res);
-    let video = res.results.filter((video) => {
-      return video.type == "Trailer";
-    });
+    let video =
+      res.results &&
+      res.results.filter((video) => {
+        return video.type == "Trailer";
+      });
 
     video = video[0];
     setMovieDetails((prevDetails) => ({
       ...prevDetails,
-      video,
+      video: video,
     }));
   }
   async function recomended() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/tv/${requested_id}/recommendations?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/movie/${requested_id}/recommendations?api_key=db9fc15e4392ee900f12fcb5246c12bf`
     );
     const res = await req.json();
 
@@ -55,7 +61,7 @@ export default function Page(id) {
   }
   async function getCredits() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/tv/${requested_id}/aggregate_credits?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/movie/${requested_id}/credits?api_key=db9fc15e4392ee900f12fcb5246c12bf`
     );
     const res = await req.json();
     // const credit = res.cast;
@@ -71,6 +77,7 @@ export default function Page(id) {
     getCredits();
     recomended();
   }, []);
+  console.log(movieDetails);
 
   return (
     <div
@@ -131,6 +138,26 @@ export default function Page(id) {
               />
             </>
           )}
+          <div className="show_image_video">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <FontAwesomeIcon className="text-2xl" icon={faPhotoFilm} />
+              <h1>99+ Photos</h1>
+            </div>
+            <div className="flex flex-col items-center gap-2 justify-center">
+              <FontAwesomeIcon className="text-2xl" icon={faFilm} />
+              <h1>20 Videos</h1>
+            </div>
+          </div>
+        </div>
+        <div className="small_show_image_video">
+          <div className="flex flex-col items-center justify-center gap-2">
+            <FontAwesomeIcon className="text-2xl" icon={faPhotoFilm} />
+            <h1>99+ Photos</h1>
+          </div>
+          <div className="flex flex-col items-center gap-2 justify-center">
+            <FontAwesomeIcon className="text-2xl" icon={faFilm} />
+            <h1>20 Videos</h1>
+          </div>
         </div>
         <div className="flex gap-2 mt-5 mb-5 genres">
           {movieDetails.genres &&
@@ -178,7 +205,7 @@ export default function Page(id) {
         >
           Movie Information
         </h1>
-        <div className="grid gap-7 ">
+        <div className="grid gap-7 mb-20 ">
           <div className="flex gap-10 p-1 justify-between">
             <b>Language</b>
             <div className="flex gap-2 mr-5">

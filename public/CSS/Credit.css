@@ -4,3 +4,6 @@
 .credit-container{
     width: 100%;
 }
+.seasons::-webkit-scrollbar{
+    display: none;
+}

@@ -1,16 +1,19 @@
 "use client";
 import { faStar, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import "@/public/CSS/SingleMovie.css";
 import Credit from "@/component/Credit";
 import Recomended from "@/component/Recomended";
+import { MyContext } from "@/app/layout";
+import Season_Details from "@/component/Season_Details";
 
 export default function Page(id) {
   const requested_id = id.params.id;
   const details = id.searchParams.details;
   console.log(id);
+  const { isSideBarOpen } = useContext(MyContext);
   const [movieDetails, setMovieDetails] = useState({}); // Initialize as an empty object
 
   async function fetchData() {
@@ -31,7 +34,9 @@ export default function Page(id) {
     const res = await req.json();
     console.log(res);
     let video = res.results.filter((video) => {
-      return video.type == "Trailer";
+      return (
+        video.type == "Trailer" || video.type == "Teaser" || res.results[0]
+      );
     });
 
     video = video[0];
@@ -72,7 +77,13 @@ export default function Page(id) {
   console.log(movieDetails);
 
   return (
-    <div className="movie_container bg-slate-950 text-white">
+    <div
+      className={
+        (isSideBarOpen &&
+          "sidebaropen overflow-hidden movie_container bg-slate-950 text-white") ||
+        " overflow-hidden movie_container bg-slate-950 text-white"
+      }
+    >
       <div className="inner_movie_container">
         <div className="flex gap-10 items-center">
           <h1 className="text-5xl mb-2">{movieDetails.original_name}</h1>
@@ -149,7 +160,9 @@ export default function Page(id) {
             alt="Movie Image"
           />
           <div>
-            <p>{movieDetails.overview}</p>
+            <p>
+              {movieDetails.overview && movieDetails.overview.slice(0, 200)}...
+            </p>
             <div className="flex gap-2 mt-5 mb-5 genres_sm">
               {movieDetails.genres &&
                 movieDetails.genres.map((category) => {
@@ -182,15 +195,15 @@ export default function Page(id) {
             </div>
           </div>
           <div className="flex gap-10  justify-between mr-5 md:mr-96">
-            <b>Budget</b>
+            <b>Total Seasons</b>
             <div>
-              <p>{movieDetails.budget}$</p>
+              <p>{movieDetails.number_of_seasons}</p>
             </div>
           </div>
           <div className="flex gap-10  justify-between mr-5 md:mr-96">
-            <b>Revenue</b>
+            <b>Episods</b>
             <div>
-              <p>{movieDetails.revenue}$</p>
+              <p>{movieDetails.number_of_episodes}</p>
             </div>
           </div>
           <div className="flex gap-10  justify-between mr-5 md:mr-96">
@@ -202,6 +215,7 @@ export default function Page(id) {
             </div>
           </div>
         </div>
+        <Season_Details seasons={movieDetails.seasons} />
         <Credit credit={movieDetails.credit} />
         <Recomended movies={movieDetails.recomended} />
       </div>

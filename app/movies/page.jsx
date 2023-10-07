@@ -61,6 +61,7 @@ export default function Page() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [page]);
+  console.log(trending);
 
   return (
     <>
@@ -76,7 +77,7 @@ export default function Page() {
           trending.map((movie) => {
             return (
               <>
-                <MovieSingleCard details="movie" movie={movie} />
+                <MovieSingleCard movie={movie} details="movie" />
               </>
             );
           })}

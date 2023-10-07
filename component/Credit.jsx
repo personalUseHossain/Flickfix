@@ -4,7 +4,7 @@ import "@/public/CSS/Credit.css";
 export default function Credit(props) {
   return (
     <div>
-      <h1 className="text-5xl my-10 ">Credit</h1>
+      <h1 className="text-5xl mb-24 ">Credit</h1>
       <div className="credit-container grid grid-flow-col gap-10 overflow-x-scroll">
         {props.credit &&
           props.credit.map((people) => {
@@ -12,7 +12,11 @@ export default function Credit(props) {
               <>
                 <div className="grid justify-center items-center gap-2 w-36 ">
                   <img
-                    style={{ height: "100%", width: "100%" }}
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                      borderRadius: "1rem",
+                    }}
                     src={
                       people.profile_path
                         ? `https://image.tmdb.org/t/p/w500/${people.profile_path}`
