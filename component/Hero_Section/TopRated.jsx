@@ -14,7 +14,7 @@ export default function TopRated() {
   }
   useEffect(() => {
     fetchData();
-  });
+  }, []);
   return (
     <>
       <h1 className="text-6xl m-5">Top Rated</h1>

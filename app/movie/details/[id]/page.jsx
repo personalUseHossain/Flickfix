@@ -76,8 +76,7 @@ export default function Page(id) {
     getMovieVideo();
     getCredits();
     recomended();
-  });
-  console.log(movieDetails);
+  }, []);
 
   return (
     <div

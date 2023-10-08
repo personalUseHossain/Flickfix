@@ -12,7 +12,7 @@ import Season_Details from "@/component/Season_Details";
 export default function Page(id) {
   const requested_id = id.params.id;
   const details = id.searchParams.details;
-  console.log(id);
+
   const { isSideBarOpen } = useContext(MyContext);
   const [movieDetails, setMovieDetails] = useState({}); // Initialize as an empty object
 
@@ -73,7 +73,7 @@ export default function Page(id) {
     getMovieVideo();
     getCredits();
     recomended();
-  });
+  }, []);
 
   return (
     <div

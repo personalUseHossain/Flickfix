@@ -24,7 +24,7 @@ export default function Image_Slider() {
   }
   useEffect(() => {
     fetchData();
-  });
+  }, []);
   let sliderImageCount = 0;
   useEffect(() => {
     const interval = setInterval(() => {

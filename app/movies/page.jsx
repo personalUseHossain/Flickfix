@@ -38,7 +38,7 @@ export default function Page() {
   useEffect(() => {
     fetchData();
     setSideBarOpen(false);
-  });
+  }, [search_query]);
 
   useEffect(() => {
     function handleScroll() {
