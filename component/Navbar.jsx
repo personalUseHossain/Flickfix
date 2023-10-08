@@ -37,7 +37,7 @@ export default function Navbar() {
     if (param.get("search")) {
       setSearch(param.get("search"));
     }
-  }, []);
+  });
   return (
     <nav
       className={"flex justify-between px-5 sm:px-7 items-center h-20 bg-black"}

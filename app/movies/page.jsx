@@ -38,7 +38,7 @@ export default function Page() {
   useEffect(() => {
     fetchData();
     setSideBarOpen(false);
-  }, []);
+  });
 
   useEffect(() => {
     function handleScroll() {
@@ -61,7 +61,6 @@ export default function Page() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [page]);
-  console.log(trending);
 
   return (
     <>

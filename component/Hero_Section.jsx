@@ -10,7 +10,7 @@ export default function Hero_Section() {
   const { isSideBarOpen, setSideBarOpen } = useContext(MyContext);
   useEffect(() => {
     setSideBarOpen(false);
-  }, []);
+  });
   return (
     <div
       className={

@@ -24,7 +24,7 @@ export default function Image_Slider() {
   }
   useEffect(() => {
     fetchData();
-  }, []);
+  });
   let sliderImageCount = 0;
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,7 +38,7 @@ export default function Image_Slider() {
     }, 4000);
 
     return () => clearInterval(interval);
-  }, []);
+  });
   return (
     <div
       style={{ transform: `translateX(-${sliderStyle}vw)` }}

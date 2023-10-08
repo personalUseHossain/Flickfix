@@ -14,7 +14,7 @@ export default function TvSeries() {
   }
   useEffect(() => {
     fetchData();
-  }, []);
+  });
   return (
     <>
       <h1 className="text-6xl m-5">Tv Series</h1>
