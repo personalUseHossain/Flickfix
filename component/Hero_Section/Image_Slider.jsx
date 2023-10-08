@@ -38,7 +38,7 @@ export default function Image_Slider() {
     }, 4000);
 
     return () => clearInterval(interval);
-  });
+  }, [sliderImageCount]);
   return (
     <div
       style={{ transform: `translateX(-${sliderStyle}vw)` }}
