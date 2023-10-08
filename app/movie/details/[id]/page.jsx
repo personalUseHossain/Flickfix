@@ -164,6 +164,7 @@ export default function Page(id) {
             movieDetails.genres.map((category) => {
               return (
                 <p
+                  key={category.id}
                   style={{ border: "1px solid white" }}
                   className="rounded-lg p-1"
                 >
@@ -189,6 +190,7 @@ export default function Page(id) {
                 movieDetails.genres.map((category) => {
                   return (
                     <p
+                      key={category.id}
                       style={{ border: "1px solid white" }}
                       className="rounded-lg p-1"
                     >
@@ -211,7 +213,11 @@ export default function Page(id) {
             <div className="flex gap-2 mr-5">
               {movieDetails.spoken_languages &&
                 movieDetails.spoken_languages.map((lang) => {
-                  return <p className=" p-1">{lang.english_name}</p>;
+                  return (
+                    <p key={lang.name} className=" p-1">
+                      {lang.english_name}
+                    </p>
+                  );
                 })}
             </div>
           </div>

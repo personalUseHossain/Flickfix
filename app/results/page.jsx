@@ -53,7 +53,7 @@ export default function Page() {
         {trending.length < 1 && (
           <>
             <h1 className="text-white text-5xl text-center mt-52">
-              No result found with '{search_query}' keyword
+              No result found with &apos;{search_query}&apos; keyword
             </h1>
           </>
         )}
