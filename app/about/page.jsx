@@ -35,7 +35,7 @@ export default function Page() {
           <p>
             Hello Everybody! <br />I am Muhammad Hossain, A Full Stack Web
             Developer. I am good at MERN Stack Development. If you need me for
-            any reason (Develop you website, FlickFix issue or else), don't
+            any reason (Develop you website, FlickFix issue or else), don&apos;t
             hesitate to contact me
           </p>
           <Link
