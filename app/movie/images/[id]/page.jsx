@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useRef, useState } from "react";
 import "@/public/CSS/Images.css";
 
-export default function page(id) {
+export default function Page(id) {
   const [all_images, setImages] = useState([]);
   const [preview, setPreview] = useState(null);
   const requested_id = id.params.id;
