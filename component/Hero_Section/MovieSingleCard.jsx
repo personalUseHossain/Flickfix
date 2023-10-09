@@ -6,6 +6,10 @@ import Link from "next/link";
 export default function PopularSingleGameCard(props) {
   return (
     <Link
+      // style={{
+      //   transform: `translateX(-${props.transform}%)`,
+      //   transition: ".2s",
+      // }}
       href={
         props.details == "tv"
           ? `/series/details/${props.movie.id}?details=${props.details}`

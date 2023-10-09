@@ -1,5 +1,10 @@
 "use client";
-import { faStar, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faStar,
+  faUser,
+  faPhotoFilm,
+  faFilm,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect, useState } from "react";
 import ReactPlayer from "react-player";
@@ -11,7 +16,6 @@ import Season_Details from "@/component/Season_Details";
 
 export default function Page(id) {
   const requested_id = id.params.id;
-  const details = id.searchParams.details;
 
   const { isSideBarOpen } = useContext(MyContext);
   const [movieDetails, setMovieDetails] = useState({}); // Initialize as an empty object
@@ -134,6 +138,26 @@ export default function Page(id) {
               />
             </>
           )}
+          <div className="small_show_image_video">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <FontAwesomeIcon className="text-2xl" icon={faPhotoFilm} />
+              <h1>99+ Photos</h1>
+            </div>
+            <div className="flex flex-col items-center gap-2 justify-center">
+              <FontAwesomeIcon className="text-2xl" icon={faFilm} />
+              <h1>20 Videos</h1>
+            </div>
+          </div>
+        </div>
+        <div className="show_image_video">
+          <div className="flex flex-col items-center justify-center gap-2">
+            <FontAwesomeIcon className="text-2xl" icon={faPhotoFilm} />
+            <h1>99+ Photos</h1>
+          </div>
+          <div className="flex flex-col items-center gap-2 justify-center">
+            <FontAwesomeIcon className="text-2xl" icon={faFilm} />
+            <h1>20 Videos</h1>
+          </div>
         </div>
         <div className="flex gap-2 mt-5 mb-5 genres">
           {movieDetails.genres &&

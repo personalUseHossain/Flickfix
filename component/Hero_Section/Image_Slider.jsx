@@ -11,6 +11,7 @@ import USA_FLAG from "@/public/Image/usa.png";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 export default function Image_Slider() {
   const [sliderStyle, setSliderStyle] = useState(0);
@@ -84,9 +85,11 @@ export default function Image_Slider() {
                       <p>{movie.original_language == "en" && "English"}</p>
                     </div>
                   </div>
-                  <button className="p-1 mb-20 w-20 bg-red-500 rounded-md">
-                    Watch
-                  </button>
+                  <Link href={`/movie/details/${movie.id}?details=movie`}>
+                    <button className="p-1 mb-20 w-20 bg-red-500 rounded-md">
+                      Watch
+                    </button>
+                  </Link>
                 </div>
                 <div className="hero-section-image-slider-overlay absolute left-0 top-0 h-96 w-1/2 z-10"></div>
               </div>
