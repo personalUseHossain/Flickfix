@@ -24,7 +24,7 @@
     /* position: absolute; */
 }
 .genres{
-    display: none;
+    display: none !important;
 }
 .show_image_video{
     display: none;
@@ -74,7 +74,7 @@
         display: none !important;
     }
     .genres{
-        display: flex;
+        display: flex !important;
     }
 }
 
@@ -94,3 +94,9 @@
         cursor: pointer;
     }
 }
+@media (width < 461px) {
+    .movie_image_sm{
+        width: 7rem;
+    }
+}
+

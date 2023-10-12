@@ -94,10 +94,7 @@ export default function Page(id) {
       <div className="inner_movie_container">
         <div className="flex gap-10 items-center">
           <h1 className="text-5xl mb-2">{movieDetails.original_name}</h1>
-          <p
-            style={{ border: "1px solid white" }}
-            className="rounded-lg h-10 p-2"
-          >
+          <p style={{ border: "1px solid white" }} className="rounded-lg p-2">
             {movieDetails.status}
           </p>
         </div>
@@ -195,7 +192,7 @@ export default function Page(id) {
               );
             })}
         </div>
-        <div className="flex gap-5 items-end mt-5">
+        <div className=" flex gap-5 items-end mt-5">
           <img
             className="movie_image_sm"
             src={
@@ -209,20 +206,6 @@ export default function Page(id) {
             <p>
               {movieDetails.overview && movieDetails.overview.slice(0, 200)}...
             </p>
-            <div className="flex gap-2 mt-5 mb-5 genres_sm">
-              {movieDetails.genres &&
-                movieDetails.genres.map((category) => {
-                  return (
-                    <p
-                      key={category.id}
-                      style={{ border: "1px solid white" }}
-                      className="rounded-lg p-1"
-                    >
-                      {category.name}
-                    </p>
-                  );
-                })}
-            </div>
           </div>
         </div>
         <h1

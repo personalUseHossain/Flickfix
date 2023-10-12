@@ -192,7 +192,7 @@ export default function Page(id) {
               );
             })}
         </div>
-        <div className="flex gap-5 items-end mt-5">
+        <div className=" flex gap-5 items-end mt-5">
           <img
             className="movie_image_sm"
             src={
@@ -203,21 +203,9 @@ export default function Page(id) {
             alt="Movie Image"
           />
           <div>
-            <p>{movieDetails.overview}</p>
-            <div className="flex gap-2 mt-5 mb-5 genres_sm">
-              {movieDetails.genres &&
-                movieDetails.genres.map((category) => {
-                  return (
-                    <p
-                      key={category.id}
-                      style={{ border: "1px solid white" }}
-                      className="rounded-lg p-1"
-                    >
-                      {category.name}
-                    </p>
-                  );
-                })}
-            </div>
+            <p>
+              {movieDetails.overview && movieDetails.overview.slice(0, 200)}...
+            </p>
           </div>
         </div>
         <h1
