@@ -1,0 +1,28 @@
+.video-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    place-items: center;
+    gap: 1rem;
+    background: rgb(45, 49, 54);
+    padding: 2rem;
+    min-height: 50vh;
+}
+.movie_video{
+    width: 100% !important;
+    /* height: 50vw !important; */
+}
+@media (width < 703px) {
+    .video-container{
+        place-items: start;
+        padding: 2rem .5rem;
+    }
+    .movie_video{
+        width: 80% !important;
+    }
+}
+
+
+
+
+
+  
