@@ -16,6 +16,7 @@ import Link from "next/link";
 
 export default function Page(id) {
   const requested_id = id.params.id;
+  const [count, setCount] = useState({ photo: 0, video: 0 });
   const { isSideBarOpen } = useContext(MyContext);
   const [movieDetails, setMovieDetails] = useState({}); // Initialize as an empty object
 
@@ -35,6 +36,7 @@ export default function Page(id) {
       `https://api.themoviedb.org/3/movie/${requested_id}/videos?api_key=db9fc15e4392ee900f12fcb5246c12bf`
     );
     const res = await req.json();
+    setCount((prev) => ({ ...prev, video: res.results && res.results.length }));
     let video =
       res.results &&
       res.results.filter((video) => {
@@ -142,30 +144,39 @@ export default function Page(id) {
           <div className="show_image_video">
             <Link
               className="h-1/2 bg-slate-800 flex flex-col items-center justify-center gap-2"
-              href={`/movie/images/${requested_id}`}
+              href={`/info/images/${requested_id}?details=movie`}
             >
               {/* <div className=""> */}
               <FontAwesomeIcon className="text-2xl" icon={faPhotoFilm} />
-              <h1>
-                {movieDetails.images && movieDetails.images.length} Photos
-              </h1>
+              <h1>All Photos</h1>
               {/* </div> */}
             </Link>
-            <div className="flex flex-col items-center gap-2 justify-center">
+            <Link
+              className="flex h-1/2 bg-slate-800 flex-col items-center gap-2 justify-center"
+              href={`/info/video/${requested_id}?details=movie`}
+            >
               <FontAwesomeIcon className="text-2xl" icon={faFilm} />
-              <h1>20 Videos</h1>
-            </div>
+              <h1>{count.video} Videos</h1>
+            </Link>
           </div>
         </div>
         <div className="small_show_image_video">
-          <div className="flex flex-col items-center justify-center gap-2">
+          <Link
+            className="w-1/2 bg-slate-800 flex flex-col items-center justify-center gap-2"
+            href={`/info/images/${requested_id}?details=movie`}
+          >
+            {/* <div className=""> */}
             <FontAwesomeIcon className="text-2xl" icon={faPhotoFilm} />
-            <h1>{movieDetails.images && movieDetails.images.length} Photos</h1>
-          </div>
-          <div className="flex flex-col items-center gap-2 justify-center">
+            <h1>All Photos</h1>
+            {/* </div> */}
+          </Link>
+          <Link
+            className="flex w-1/2 p-2 bg-slate-800 flex-col items-center gap-2 justify-center"
+            href={`/info/video/${requested_id}?details=movie`}
+          >
             <FontAwesomeIcon className="text-2xl" icon={faFilm} />
-            <h1>20 Videos</h1>
-          </div>
+            <h1>{count.video} Videos</h1>
+          </Link>
         </div>
         <div className="flex gap-2 mt-5 mb-5 genres">
           {movieDetails.genres &&
