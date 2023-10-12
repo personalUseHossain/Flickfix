@@ -5,7 +5,7 @@
   padding: 1rem 0;
       /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
       gap: 4rem;
-      overflow-x: hidden;
+      overflow-x: scroll;
   }
   .movie-title {
     font-size: 1.5rem; /* Adjust the font size as needed */
@@ -17,9 +17,7 @@
   .movie-overview{
     text-overflow: ellipsis;
   }
-  .popular_games-container:hover{
-    overflow-x: scroll;
-  }
+
   
   .popular_games-container::-webkit-scrollbar{
     /* height: 0; */
