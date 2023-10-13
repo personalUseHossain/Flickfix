@@ -2,9 +2,11 @@
 import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
 
+import { signOut, useSession } from "next-auth/react";
+
 //image
 import Logo from "@/public/Image/logo.png";
-import User from "@/public/Image/Hossain.jpg";
+import User from "@/public/Image/User.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
@@ -15,14 +17,14 @@ import {
   faMessage,
   faRightFromBracket,
   faXmark,
-  faFilter,
 } from "@fortawesome/free-solid-svg-icons";
 import { MyContext } from "@/app/layout";
 import { useRouter, useSearchParams } from "next/navigation";
+import Login from "./Login";
 
 export default function Navbar() {
   const param = useSearchParams();
-
+  const session = useSession();
   const router = useRouter();
   const [Search, setSearch] = useState("");
   const { setSideBarOpen } = useContext(MyContext);
@@ -107,54 +109,75 @@ export default function Navbar() {
         )}
         {!isInputVisible && (
           <div className="relative">
-            <Image
+            <img
               onClick={() => setUserOpen(!isUserOpen)}
               className="rounded-full"
-              src={User}
+              src={
+                (session.status == "unauthenticated" &&
+                  "https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png") ||
+                (session.data && session.data.user.image)
+              }
               height={50}
               width={50}
               alt="User"
             />
             {isUserOpen && (
               <>
-                <div className="absolute right-5 z-10 top-20 bg-gray-700 rounded-lg h-92 py-5 px-3 hover:shadow-white text-white w-64">
-                  <div className="user_info px-3">
-                    <div className="flex justify-between items-center">
-                      <Image
-                        onClick={() => setUserOpen(!isUserOpen)}
-                        className="rounded-full"
-                        src={User}
-                        height={50}
-                        width={50}
-                        alt="User"
-                      />
-                      <FontAwesomeIcon
-                        onClick={() => setUserOpen(false)}
-                        className="mx-5 p-2 hover:bg-gray-900 rounded-full"
-                        icon={faXmark}
-                      />
-                    </div>
-                    <h2 className="font-bold">Hossain</h2>
-                    <small>Personal.mdhossain@gmail.com</small>
-                  </div>
+                {(session.status == "authenticated" && (
+                  <>
+                    <>
+                      <div className="absolute right-5 z-10 top-20 bg-gray-700 rounded-lg h-92 py-5 px-3 hover:shadow-white text-white w-64">
+                        <div className="user_info px-3">
+                          <div className="flex justify-between items-center">
+                            <img
+                              onClick={() => setUserOpen(!isUserOpen)}
+                              className="rounded-full"
+                              src={session.data && session.data.user.image}
+                              height={50}
+                              width={50}
+                              alt="User"
+                            />
+                            <FontAwesomeIcon
+                              onClick={() => setUserOpen(false)}
+                              className="mx-5 p-2 hover:bg-gray-900 rounded-full"
+                              icon={faXmark}
+                            />
+                          </div>
+                          <h2 className="font-bold">
+                            {session.data && session.data.user.name}
+                          </h2>
+                          <small>{session.data.user.email}</small>
+                        </div>
 
-                  <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4 rounded-lg px-3  items-center">
-                    <FontAwesomeIcon icon={faHeart} />
-                    <h4>Saved Movies</h4>
-                  </div>
-                  <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4 rounded-lg px-3  items-center">
-                    <FontAwesomeIcon icon={faMessage} />
-                    <h4>Send FeedBack</h4>
-                  </div>
-                  <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4 px-3  items-center rounded-lg">
-                    <FontAwesomeIcon icon={faCircleQuestion} />
-                    <h4>Support</h4>
-                  </div>
-                  <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4  px-3  items-center rounded-lg">
-                    <FontAwesomeIcon icon={faRightFromBracket} />
-                    <h4>Sign Out</h4>
-                  </div>
-                </div>
+                        <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4 rounded-lg px-3  items-center">
+                          <FontAwesomeIcon icon={faHeart} />
+                          <h4>Saved Movies</h4>
+                        </div>
+                        <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4 rounded-lg px-3  items-center">
+                          <FontAwesomeIcon icon={faMessage} />
+                          <h4>Send FeedBack</h4>
+                        </div>
+                        <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4 px-3  items-center rounded-lg">
+                          <FontAwesomeIcon icon={faCircleQuestion} />
+                          <h4>Support</h4>
+                        </div>
+                        <div
+                          onClick={() => signOut("google")}
+                          className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4  px-3  items-center rounded-lg"
+                        >
+                          <FontAwesomeIcon icon={faRightFromBracket} />
+                          <h4>Sign Out</h4>
+                        </div>
+                      </div>
+                    </>
+                  </>
+                )) || (
+                  <>
+                    <div className="absolute right-5 z-10 top-20 bg-gray-700 rounded-lg h-92 py-5 px-3 hover:shadow-white text-white w-64">
+                      <Login />
+                    </div>
+                  </>
+                )}
               </>
             )}
           </div>
