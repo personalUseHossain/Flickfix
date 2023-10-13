@@ -14,7 +14,7 @@ export default function Page() {
             style={{ minHeight: "50vh" }}
             className="bg-slate-800 text-white flex flex-col gap-5 items-center justify-center"
           >
-            <h1 className="text-3xl">You're already logged in</h1>
+            <h1 className="text-3xl">You&apos;re already logged in</h1>
             <button
               className="p-3 bg-slate-900 rounded-md"
               onClick={() => signOut("google")}
