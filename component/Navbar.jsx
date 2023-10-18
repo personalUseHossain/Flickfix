@@ -21,6 +21,7 @@ import {
 import { MyContext } from "@/app/layout";
 import { useRouter, useSearchParams } from "next/navigation";
 import Login from "./Login";
+import Link from "next/link";
 
 export default function Navbar() {
   const param = useSearchParams();
@@ -83,7 +84,7 @@ export default function Navbar() {
           <>
             <form
               onSubmit={handleSearch}
-              className="flex relative items-center gap-20 w-screen"
+              className="flex relative items-center gap-20 w-screen justify-center"
             >
               <FontAwesomeIcon
                 onClick={() => setInputVisible(false)}
@@ -91,8 +92,9 @@ export default function Navbar() {
                 icon={faArrowLeft}
               />
               <FontAwesomeIcon
+                style={{ left: "25rem" }}
                 onClick={() => setInputVisible(true)}
-                className=" text-2xl text-gray-300 absolute left-28 top-3"
+                className=" text-2xl text-gray-300 absolute top-3"
                 icon={faMagnifyingGlass}
               />
               <input
@@ -109,21 +111,42 @@ export default function Navbar() {
         )}
         {!isInputVisible && (
           <div className="relative">
-            <img
-              onClick={() => setUserOpen(!isUserOpen)}
-              className="rounded-full"
-              src={
-                (session.status == "unauthenticated" &&
-                  "https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png") ||
-                (session.data && session.data.user.image)
-              }
-              height={50}
-              width={50}
-              alt="User"
-            />
+            {(session.status == "authenticated" && (
+              <>
+                <img
+                  onClick={() => setUserOpen(!isUserOpen)}
+                  className="rounded-full"
+                  src={
+                    (session.status == "unauthenticated" &&
+                      "https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png") ||
+                    (session.data && session.data.user.image)
+                  }
+                  height={50}
+                  width={50}
+                  alt="User"
+                />
+              </>
+            )) || (
+              <>
+                <Link href={"/login"}>
+                  <img
+                    onClick={() => setUserOpen(!isUserOpen)}
+                    className="rounded-full"
+                    src={
+                      (session.status == "unauthenticated" &&
+                        "https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png") ||
+                      (session.data && session.data.user.image)
+                    }
+                    height={50}
+                    width={50}
+                    alt="User"
+                  />
+                </Link>
+              </>
+            )}
             {isUserOpen && (
               <>
-                {(session.status == "authenticated" && (
+                {session.status == "authenticated" && (
                   <>
                     <>
                       <div className="absolute right-5 z-10 top-20 bg-gray-700 rounded-lg h-92 py-5 px-3 hover:shadow-white text-white w-64">
@@ -170,12 +193,6 @@ export default function Navbar() {
                         </div>
                       </div>
                     </>
-                  </>
-                )) || (
-                  <>
-                    <div className="absolute right-5 z-10 top-20 bg-gray-700 rounded-lg h-92 py-5 px-3 hover:shadow-white text-white w-64">
-                      <Login />
-                    </div>
                   </>
                 )}
               </>
