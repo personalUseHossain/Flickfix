@@ -84,7 +84,7 @@ export default function Navbar() {
           <>
             <form
               onSubmit={handleSearch}
-              className="flex relative items-center gap-20 w-screen justify-center"
+              className="flex relative items-center gap-20 w-screen"
             >
               <FontAwesomeIcon
                 onClick={() => setInputVisible(false)}
@@ -92,9 +92,8 @@ export default function Navbar() {
                 icon={faArrowLeft}
               />
               <FontAwesomeIcon
-                style={{ left: "25rem" }}
                 onClick={() => setInputVisible(true)}
-                className=" text-2xl text-gray-300 absolute top-3"
+                className=" text-2xl text-gray-300 absolute top-3 left-28"
                 icon={faMagnifyingGlass}
               />
               <input
