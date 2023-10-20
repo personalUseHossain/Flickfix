@@ -14,13 +14,8 @@ import Credit from "@/component/Credit";
 import Recomended from "@/component/Recomended";
 import { MyContext } from "@/app/layout";
 import Season_Details from "@/component/Season_Details";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export default function Page(id) {
-  // const session = useSession();
-  // const router = useRouter();
-  // if (session.status == "unauthenticated") return router.push("/login");
   const requested_id = id.params.id;
   const [count, setCount] = useState({ video: 0, photo: 0 });
   const { isSideBarOpen } = useContext(MyContext);
