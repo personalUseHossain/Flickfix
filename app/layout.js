@@ -2,7 +2,7 @@
 import Navbar from "@/component/Navbar";
 import Sidebar from "@/component/Sidebar";
 import '@/app/globals.css'
-import { createContext, useState } from "react"
+import { createContext, useEffect, useRef, useState } from "react"
 import Footer from "@/component/Footer";
 import AuthProvider from "@/component/AuthProvider";
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -14,9 +14,12 @@ export const MyContext = createContext()
 
 export default function RootLayout({ children }) {
   const [isSideBarOpen, setSideBarOpen] = useState(false);
+
+
+
   return (
     <html lang="en">
-      <body>
+      <body className={isSideBarOpen && 'overflow-hidden'}>
 
         <AuthProvider>
           <MyContext.Provider value={{ isSideBarOpen, setSideBarOpen }}>
@@ -26,6 +29,7 @@ export default function RootLayout({ children }) {
             <Footer />
           </MyContext.Provider>
         </AuthProvider>
+
       </body>
     </html>
   )
