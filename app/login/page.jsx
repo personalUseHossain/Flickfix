@@ -1,26 +1,50 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { MyContext } from "../layout";
+import Link from "next/link";
 
 export default function Page() {
+  const redirect_url = useSearchParams().get("redirect");
   const session = useSession();
+  const router = useRouter();
+  const { isSideBarOpen, setSideBarOpen } = useContext(MyContext);
+  useEffect(() => {
+    setSideBarOpen(false);
+  }, []);
+
+  useEffect(() => {
+    if (redirect_url && session) {
+      router.push(redirect_url);
+    }
+  }, [session]);
+
   return (
-    <>
+    <div
+      className={
+        (isSideBarOpen && "sidebaropen  overflow-hidden") || " overflow-hidden"
+      }
+    >
       {(session.status == "authenticated" && (
         <>
           <div
             style={{ minHeight: "50vh" }}
             className="bg-slate-800 text-white flex flex-col gap-5 items-center justify-center"
           >
-            <h1 className="text-3xl">You&apos;re already logged in</h1>
-            <button
-              className="p-3 bg-slate-900 rounded-md"
-              onClick={() => signOut("google")}
-            >
-              Logout
-            </button>
+            <h1 className="text-3xl">You&apos;re logged in</h1>
+            <div className="flex gap-5">
+              <button
+                className="p-3 bg-slate-900 rounded-md"
+                onClick={() => signOut()}
+              >
+                Logout
+              </button>
+              <Link href={"/"} className="p-3 bg-slate-900 rounded-md">
+                Home
+              </Link>
+            </div>
           </div>
         </>
       )) || (
@@ -31,7 +55,9 @@ export default function Page() {
           >
             <button
               className="flex items-center gap-6 bg-white px-7 py-2 rounded-lg"
-              onClick={() => signIn("google")}
+              onClick={() =>
+                signIn("google", { redirect: redirect_url && false })
+              }
             >
               <img
                 className="rounded-full w-10"
@@ -42,7 +68,9 @@ export default function Page() {
             </button>
             <button
               className="flex items-center gap-6 bg-blue-700 px-5 py-2 rounded-lg"
-              onClick={() => signIn("facebook")}
+              onClick={() =>
+                signIn("facebook", { redirect: redirect_url && false })
+              }
             >
               <img
                 className="rounded-full w-10"
@@ -53,7 +81,9 @@ export default function Page() {
             </button>
             <button
               className="flex items-center gap-6 bg-black px-7 py-2 rounded-lg"
-              onClick={() => signIn("github")}
+              onClick={() =>
+                signIn("github", { redirect: redirect_url && false })
+              }
             >
               <img
                 className="rounded-full w-14"
@@ -65,6 +95,6 @@ export default function Page() {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }
