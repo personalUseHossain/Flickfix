@@ -33,18 +33,30 @@ export default function Page() {
             style={{ minHeight: "50vh" }}
             className="bg-slate-800 text-white flex flex-col gap-5 items-center justify-center"
           >
-            <h1 className="text-3xl">You&apos;re logged in</h1>
-            <div className="flex gap-5">
-              <button
-                className="p-3 bg-slate-900 rounded-md"
-                onClick={() => signOut()}
-              >
-                Logout
-              </button>
-              <Link href={"/"} className="p-3 bg-slate-900 rounded-md">
-                Home
-              </Link>
-            </div>
+            {(redirect_url && session && (
+              <>
+                <h1 className="text-3xl">
+                  Please wait. <br />
+                  Redirecting...
+                </h1>
+              </>
+            )) || (
+              <>
+                <h1 className="text-3xl">You&apos;re logged in</h1>
+
+                <div className="flex gap-5">
+                  <button
+                    className="p-3 bg-slate-900 rounded-md"
+                    onClick={() => signOut()}
+                  >
+                    Logout
+                  </button>
+                  <Link href={"/"} className="p-3 bg-slate-900 rounded-md">
+                    Home
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         </>
       )) || (
