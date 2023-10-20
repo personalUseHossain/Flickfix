@@ -1,11 +1,15 @@
 "use client";
 import { faMapMarked, faMessage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { MyContext } from "../layout";
 
 export default function Page() {
-  const { isSideBarOpen } = useContext(MyContext);
+  const { isSideBarOpen, setSideBarOpen } = useContext(MyContext);
+
+  useEffect(() => {
+    setSideBarOpen(false);
+  }, []);
   return (
     <div
       className={
