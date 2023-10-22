@@ -1,15 +1,20 @@
 "use client";
 import Image from "next/image";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MyContext } from "../layout";
 import Link from "next/link";
+import Cookies from "universal-cookie";
 
 export default function Page() {
   const redirect_url = useSearchParams().get("redirect");
   const session = useSession();
+  const cookies = new Cookies();
   const router = useRouter();
+  const param = useSearchParams();
+  const token = param.get("request_token");
+
   const { isSideBarOpen, setSideBarOpen } = useContext(MyContext);
   useEffect(() => {
     setSideBarOpen(false);
@@ -20,6 +25,39 @@ export default function Page() {
       router.push(redirect_url);
     }
   }, [session]);
+  async function generateRequestToken() {
+    const req = await fetch(
+      "https://api.themoviedb.org/3/authentication/token/new?api_key=db9fc15e4392ee900f12fcb5246c12bf"
+    );
+    return await req.json();
+  }
+
+  async function hanldeTMDBLogin() {
+    const body = await generateRequestToken();
+    const request_token = body.request_token;
+    window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=http://localhost:3000/login`;
+  }
+
+  async function generateSession() {
+    try {
+      const req = await fetch(
+        `https://api.themoviedb.org/3/authentication/session/new?api_key=db9fc15e4392ee900f12fcb5246c12bf&request_token=${token}`
+      );
+      const session = await req.json();
+      if (session.success) {
+        console.log(session);
+        cookies.set("tmdb_session", session.session_id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      generateSession();
+    }
+  }, []);
 
   return (
     <div
@@ -33,37 +71,51 @@ export default function Page() {
             style={{ minHeight: "50vh" }}
             className="bg-slate-800 text-white flex flex-col gap-5 items-center justify-center"
           >
-            {(redirect_url && session && (
+            {session && (
               <>
-                <h1 className="text-3xl">
-                  Please wait. <br />
+                {setTimeout(() => {
+                  router.push("/");
+                }, 5000)}
+                <h1 className="text-3xl text-center">
+                  You&apos;re Logged in <br />
                   Redirecting...
                 </h1>
               </>
-            )) || (
-              <>
-                <h1 className="text-3xl">You&apos;re logged in</h1>
-
-                <div className="flex gap-5">
-                  <button
-                    className="p-3 bg-slate-900 rounded-md"
-                    onClick={() => signOut()}
-                  >
-                    Logout
-                  </button>
-                  <Link href={"/"} className="p-3 bg-slate-900 rounded-md">
-                    Home
-                  </Link>
-                </div>
-              </>
             )}
+            {
+              redirect_url && session && (
+                <>
+                  {setTimeout(() => {
+                    router.push("/");
+                  }, 5000)}
+                  <h1 className="text-3xl">
+                    Please wait. <br />
+                    Redirecting...
+                  </h1>
+                  {setTimeout(() => {
+                    router;
+                  }, 3000)}
+                </>
+              )
+              // || (
+              //   <>
+              //     <h1 className="text-3xl">
+              //       Please wait. <br />
+              //       Redirecting...
+              //     </h1>
+              //     {setTimeout(() => {
+              //         router
+              //     }, 3000)}
+              //   </>
+              // )
+            }
           </div>
         </>
       )) || (
         <>
           <div
             style={{ minHeight: "50vh" }}
-            className="bg-slate-800 flex flex-col gap-5 items-center justify-center"
+            className="bg-slate-800 flex py-20 flex-col gap-5 items-center justify-center"
           >
             <button
               className="flex items-center gap-6 bg-white px-7 py-2 rounded-lg"
@@ -103,6 +155,20 @@ export default function Page() {
                 alt="404"
               />
               <h1 className="text-white text-2xl">Continue with Github</h1>
+            </button>
+            <p className="text-white mt-10">
+              To Give Review, Add to watchlist/Favorite
+            </p>
+            <button
+              className="flex items-center gap-6 bg-black px-7 py-2 rounded-lg"
+              onClick={hanldeTMDBLogin}
+            >
+              <img
+                className="rounded-full w-14"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQASVeK2AbsIZL0aehqGzTFm-Y27vKIyaqSHBvl1Ws6pw&s"
+                alt="404"
+              />
+              <h1 className="text-white text-2xl">Continue with TMDB</h1>
             </button>
           </div>
         </>

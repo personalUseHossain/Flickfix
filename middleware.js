@@ -16,9 +16,11 @@ export async function middleware(request) {
     }
 
 
+
+
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ['/series/:path*', '/movie/:path*', '/info/:path*'],
+    matcher: ['/series/:path*', '/movie/:path*', '/info/:path*', '/login'],
 };

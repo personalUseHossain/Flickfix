@@ -22,11 +22,15 @@ import { MyContext } from "@/app/layout";
 import { useRouter, useSearchParams } from "next/navigation";
 import Login from "./Login";
 import Link from "next/link";
+import Cookies from "universal-cookie";
 
 export default function Navbar() {
   const param = useSearchParams();
+  const cookies = new Cookies();
+  const tmdb_sessoin = cookies.get("tmdb_session");
   const session = useSession();
   const router = useRouter();
+  const [userData, setUserData] = useState(null);
   const [Search, setSearch] = useState("");
   const { setSideBarOpen } = useContext(MyContext);
   const [isInputVisible, setInputVisible] = useState(false);
@@ -36,11 +40,33 @@ export default function Navbar() {
     e.preventDefault();
     router.push(`/results?search=${Search}`);
   }
+  async function getUserData() {
+    const req = await fetch(
+      `https://api.themoviedb.org/3/account?api_key=db9fc15e4392ee900f12fcb5246c12bf&session_id=${tmdb_sessoin}`
+    );
+    const res = await req.json();
+    const userData = { image: res.avatar, name: res.username, id: res.id };
+    setUserData(userData);
+  }
+
+  useEffect(() => {
+    if (tmdb_sessoin != null) {
+      getUserData();
+    }
+  }, []);
+
+  if (userData) {
+    session.status = "authenticated";
+    session.data = { user: userData };
+  }
+
   useEffect(() => {
     if (param.get("search")) {
       setSearch(param.get("search"));
     }
-  });
+  }, []);
+  console.log(session);
+
   return (
     <nav
       className={"flex justify-between px-5 sm:px-7 items-center h-20 bg-black"}
@@ -118,7 +144,10 @@ export default function Navbar() {
                   src={
                     (session.status == "unauthenticated" &&
                       "https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png") ||
-                    (session.data && session.data.user.image)
+                    (session.data &&
+                      session.data.user.image.gravatar &&
+                      `https://secure.gravatar.com/avatar/${session.data.user.image.gravatar.hash}.jpg?s=200`) ||
+                    session.data.user.image
                   }
                   height={50}
                   width={50}
@@ -154,7 +183,14 @@ export default function Navbar() {
                             <img
                               onClick={() => setUserOpen(!isUserOpen)}
                               className="rounded-full"
-                              src={session.data && session.data.user.image}
+                              src={
+                                (session.status == "unauthenticated" &&
+                                  "https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png") ||
+                                (session.data &&
+                                  session.data.user.image.gravatar &&
+                                  `https://secure.gravatar.com/avatar/${session.data.user.image.gravatar.hash}.jpg?s=200`) ||
+                                session.data.user.image
+                              }
                               height={50}
                               width={50}
                               alt="User"
@@ -184,7 +220,10 @@ export default function Navbar() {
                           <h4>Support</h4>
                         </div>
                         <div
-                          onClick={() => signOut("google")}
+                          onClick={() => {
+                            cookies.remove("tmdb_session");
+                            signOut("google");
+                          }}
                           className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4  px-3  items-center rounded-lg"
                         >
                           <FontAwesomeIcon icon={faRightFromBracket} />
