@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
         <link rel="canonical" href="https://www.flickfix.vercel.app" />
         <link rel="icon" type="image/png" href='https://res.cloudinary.com/dndev4rnw/image/upload/v1697775263/logo_mtkeej.png' />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7589882222551986"
-          crossorigin="anonymous"></script>
+          crossOrigin="anonymous"></script>
         <meta name="google-adsense-account" content="ca-pub-7589882222551986"></meta>
       </head>
 

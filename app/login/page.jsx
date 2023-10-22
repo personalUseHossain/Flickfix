@@ -35,7 +35,7 @@ export default function Page() {
   async function hanldeTMDBLogin() {
     const body = await generateRequestToken();
     const request_token = body.request_token;
-    window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=http://localhost:3000/login`;
+    window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=https://flickfix.vercel.app/login`;
   }
 
   async function generateSession() {
