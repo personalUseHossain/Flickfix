@@ -1,7 +1,9 @@
 "use client";
 import {
   faFilm,
+  faHeart,
   faPhotoFilm,
+  faPlus,
   faStar,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -13,16 +15,22 @@ import Credit from "@/component/Credit";
 import Recomended from "@/component/Recomended";
 import { MyContext } from "@/app/layout";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import Cookies from "universal-cookie";
+import { useSession } from "next-auth/react";
 
 export default function Page(id) {
   const requested_id = id.params.id;
+  const session = useSession();
   const [count, setCount] = useState({ photo: 0, video: 0 });
   const { isSideBarOpen } = useContext(MyContext);
+  const cookies = new Cookies();
+  const tmdb_session = cookies.get("tmdb_session");
   const [movieDetails, setMovieDetails] = useState({}); // Initialize as an empty object
 
   async function fetchData() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/movie/${requested_id}?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/movie/${requested_id}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const res = await req.json();
     setMovieDetails((prevDetails) => ({
@@ -33,7 +41,7 @@ export default function Page(id) {
   async function keyword() {
     const req = await fetch(
       `
-      https://api.themoviedb.org/3/movie/${requested_id}/keywords?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      https://api.themoviedb.org/3/movie/${requested_id}/keywords?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const res = await req.json();
     setMovieDetails((prevDetails) => ({
@@ -44,7 +52,7 @@ export default function Page(id) {
 
   async function getMovieVideo() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/movie/${requested_id}/videos?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/movie/${requested_id}/videos?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const res = await req.json();
     setCount((prev) => ({ ...prev, video: res.results && res.results.length }));
@@ -62,7 +70,7 @@ export default function Page(id) {
   }
   async function recomended() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/movie/${requested_id}/recommendations?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/movie/${requested_id}/recommendations?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const res = await req.json();
 
@@ -73,7 +81,7 @@ export default function Page(id) {
   }
   async function getCredits() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/movie/${requested_id}/credits?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/movie/${requested_id}/credits?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const res = await req.json();
     const images = [];
@@ -84,6 +92,77 @@ export default function Page(id) {
       ...prevDetails,
       credit: res.cast,
     }));
+  }
+
+  async function addToWatchList() {
+    if (
+      session.status == "authenticated" &&
+      session.data &&
+      session.data.user.id
+    ) {
+      const body = {
+        media_type: "movie",
+        media_id: requested_id,
+        watchlist: true,
+      };
+      const req = await fetch(
+        `https://api.themoviedb.org/3/account/${
+          session && session.data.user.id
+        }/watchlist?session_id=${tmdb_session}&api_key=${
+          process.env.NEXT_PUBLIC_API_KEY
+        }`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const res = await req.json();
+      if (res.success) {
+        window.alert(`This movie has been added to watchlist`);
+      } else if (!res.status) {
+        window.alert("Failed to add on watchlist");
+      }
+    } else {
+      window.alert("You have to Login with TMDB Account.");
+    }
+  }
+  async function addToFavorite() {
+    if (
+      session.status == "authenticated" &&
+      session.data &&
+      session.data.user.id
+    ) {
+      const body = {
+        media_type: "movie",
+        media_id: requested_id,
+        favorite: true,
+      };
+      const req = await fetch(
+        `https://api.themoviedb.org/3/account/${
+          session && session.data.user.id
+        }/favorite?session_id=${tmdb_session}&api_key=${
+          process.env.NEXT_PUBLIC_API_KEY
+        }`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const res = await req.json();
+      if (res.success) {
+        window.alert(`This movie has been added to favorite`);
+      } else if (!res.status) {
+        window.alert("Failed to add on favorite");
+      }
+    } else {
+      window.alert("You have to Login with TMDB Account.");
+    }
   }
 
   useEffect(() => {
@@ -109,6 +188,7 @@ export default function Page(id) {
         <div className="inner_movie_container">
           <div className="flex gap-10 items-center">
             <h1 className="text-5xl mb-2">{movieDetails.original_title}</h1>
+
             <p
               style={{ border: "1px solid white" }}
               className="rounded-lg h-10 p-2"
@@ -116,6 +196,7 @@ export default function Page(id) {
               {movieDetails.status}
             </p>
           </div>
+
           <p className="mb-5">{movieDetails.tagline}</p>
           <div className="flex gap-5 mb-5">
             <p>{movieDetails.first_air_date}</p>
@@ -125,6 +206,7 @@ export default function Page(id) {
             </p>
             <p>{movieDetails.runtime}m</p>
           </div>
+
           <div className="movie_image_video_container">
             <img
               className="movie_image"
@@ -224,6 +306,24 @@ export default function Page(id) {
                 ...
               </p>
             </div>
+          </div>
+          <div className="flex gap-5 my-10">
+            <button
+              onClick={addToWatchList}
+              class="bg-slate-700 hover:bg-slate-600 text-left text-white font-bold py-4 px-6 rounded"
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-2" />
+              <span>Watchlist</span>
+              <p className="text-xs">Add This Movie To Watchlist</p>
+            </button>
+            <button
+              onClick={addToFavorite}
+              class="bg-slate-300 hover:bg-slate-200 text-left text-cyan-950 font-bold py-4 px-6 rounded"
+            >
+              <FontAwesomeIcon icon={faHeart} className="mr-2" />
+              <span>Favorite</span>
+              <p className="text-xs">Add This Movie To Favorite</p>
+            </button>
           </div>
           <h1
             style={{ margin: "1rem 0", borderBottom: "1px solid whitesmoke" }}

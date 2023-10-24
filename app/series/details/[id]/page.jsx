@@ -4,6 +4,8 @@ import {
   faUser,
   faPhotoFilm,
   faFilm,
+  faHeart,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,16 +17,21 @@ import Recomended from "@/component/Recomended";
 import { MyContext } from "@/app/layout";
 import Season_Details from "@/component/Season_Details";
 import Head from "next/head";
+import { useSession } from "next-auth/react";
+import Cookies from "universal-cookie";
 
 export default function Page(id) {
   const requested_id = id.params.id;
+  const session = useSession();
+  const cookies = new Cookies();
+  const tmdb_session = cookies.get("tmdb_session");
   const [count, setCount] = useState({ video: 0, photo: 0 });
   const { isSideBarOpen } = useContext(MyContext);
   const [movieDetails, setMovieDetails] = useState({}); // Initialize as an empty object
 
   async function fetchData() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/tv/${requested_id}?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/tv/${requested_id}?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const res = await req.json();
     setMovieDetails((prevDetails) => ({
@@ -35,7 +42,7 @@ export default function Page(id) {
 
   async function getMovieVideo() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/tv/${requested_id}/videos?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/tv/${requested_id}/videos?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const res = await req.json();
     setCount((prevCount) => ({
@@ -56,7 +63,7 @@ export default function Page(id) {
   }
   async function recomended() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/tv/${requested_id}/recommendations?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/tv/${requested_id}/recommendations?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const res = await req.json();
 
@@ -67,7 +74,7 @@ export default function Page(id) {
   }
   async function getCredits() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/tv/${requested_id}/aggregate_credits?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/tv/${requested_id}/aggregate_credits?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const res = await req.json();
     // const credit = res.cast;
@@ -75,6 +82,78 @@ export default function Page(id) {
       ...prevDetails,
       credit: res.cast,
     }));
+  }
+
+  async function addToWatchList() {
+    if (
+      session.status == "authenticated" &&
+      session.data &&
+      session.data.user.id
+    ) {
+      const body = {
+        media_type: "tv",
+        media_id: requested_id,
+        watchlist: true,
+      };
+      const req = await fetch(
+        `https://api.themoviedb.org/3/account/${
+          session && session.data.user.id
+        }/watchlist?session_id=${tmdb_session}&api_key=${
+          process.env.NEXT_PUBLIC_API_KEY
+        }`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const res = await req.json();
+      if (res.success) {
+        window.alert(`This Series has been added to watchlist`);
+      } else if (!res.status) {
+        window.alert("Failed to add on watchlist");
+      }
+    } else {
+      window.alert("You have to Login with TMDB Account.");
+    }
+  }
+  async function addToFavorite() {
+    if (
+      session.status == "authenticated" &&
+      session.data &&
+      session.data.user.id
+    ) {
+      const body = {
+        media_type: "tv",
+        media_id: requested_id,
+        favorite: true,
+      };
+      const req = await fetch(
+        `https://api.themoviedb.org/3/account/${
+          session && session.data.user.id
+        }/favorite?session_id=${tmdb_session}&api_key=${
+          process.env.NEXT_PUBLIC_API_KEY
+        }`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const res = await req.json();
+      if (res.success) {
+        window.alert(`This Series has been added to favorite`);
+      } else if (!res.status) {
+        window.alert("Failed to add on favorite");
+      }
+    } else {
+      console.log(session);
+      window.alert("You have to Login with TMDB Account.");
+    }
   }
 
   useEffect(() => {
@@ -215,11 +294,29 @@ export default function Page(id) {
               </p>
             </div>
           </div>
+          <div className="flex gap-5 my-10">
+            <button
+              onClick={addToWatchList}
+              class="bg-slate-700 hover:bg-slate-600 text-left text-white font-bold py-4 px-6 rounded"
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-2" />
+              <span>Watchlist</span>
+              <p className="text-xs">Add This Series To Watchlist</p>
+            </button>
+            <button
+              onClick={addToFavorite}
+              class="bg-slate-300 hover:bg-slate-200 text-left text-cyan-950 font-bold py-4 px-6 rounded"
+            >
+              <FontAwesomeIcon icon={faHeart} className="mr-2" />
+              <span>Favorite</span>
+              <p className="text-xs">Add This Series To Favorite</p>
+            </button>
+          </div>
           <h1
             style={{ margin: "1rem 0", borderBottom: "1px solid whitesmoke" }}
             className="text-3xl p-5"
           >
-            Movie Information
+            Series Information
           </h1>
           <div className="grid gap-7">
             <div className="flex gap-10 p-1 justify-between">

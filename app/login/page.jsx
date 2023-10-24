@@ -27,7 +27,7 @@ export default function Page() {
   }, [session]);
   async function generateRequestToken() {
     const req = await fetch(
-      "https://api.themoviedb.org/3/authentication/token/new?api_key=db9fc15e4392ee900f12fcb5246c12bf"
+      `https://api.themoviedb.org/3/authentication/token/new?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     return await req.json();
   }
@@ -41,12 +41,13 @@ export default function Page() {
   async function generateSession() {
     try {
       const req = await fetch(
-        `https://api.themoviedb.org/3/authentication/session/new?api_key=db9fc15e4392ee900f12fcb5246c12bf&request_token=${token}`
+        `https://api.themoviedb.org/3/authentication/session/new?api_key=${process.env.NEXT_PUBLIC_API_KEY}&request_token=${token}`
       );
       const session = await req.json();
       if (session.success) {
         console.log(session);
         cookies.set("tmdb_session", session.session_id);
+        window.location.href("/");
       }
     } catch (error) {
       console.log(error);
@@ -92,9 +93,6 @@ export default function Page() {
                     Please wait. <br />
                     Redirecting...
                   </h1>
-                  {setTimeout(() => {
-                    router;
-                  }, 3000)}
                 </>
               )
               // || (

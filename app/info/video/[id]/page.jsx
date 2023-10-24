@@ -7,7 +7,7 @@ export default function Page(id) {
   const [video, setVideo] = useState([]);
   async function getVideo() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/${id.searchParams.details}/${id.params.id}/videos?api_key=db9fc15e4392ee900f12fcb5246c12bf`
+      `https://api.themoviedb.org/3/${id.searchParams.details}/${id.params.id}/videos?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const res = await req.json();
     const videos = res.results;

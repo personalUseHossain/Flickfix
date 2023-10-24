@@ -17,7 +17,7 @@ export default function Page() {
     try {
       setLoading(true); // Set loading to true before fetching
       const req = await fetch(
-        `https://api.themoviedb.org/3/trending/all/day?api_key=db9fc15e4392ee900f12fcb5246c12bf&page=${page}`
+        `https://api.themoviedb.org/3/trending/all/day?api_key=${process.env.NEXT_PUBLIC_API_KEY}&page=${page}`
       );
       const res = await req.json();
       if (res.results.length > 0) {
