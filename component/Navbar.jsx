@@ -11,11 +11,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
   faBarsStaggered,
+  faBookmark,
   faCircleQuestion,
   faHeart,
   faMagnifyingGlass,
   faMessage,
   faRightFromBracket,
+  faStar,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { MyContext } from "@/app/layout";
@@ -42,7 +44,7 @@ export default function Navbar() {
   }
   async function getUserData() {
     const req = await fetch(
-      `https://api.themoviedb.org/3/account?api_key=db9fc15e4392ee900f12fcb5246c12bf&session_id=${tmdb_sessoin}`
+      `https://api.themoviedb.org/3/account?api_key=${process.env.NEXT_PUBLIC_API_KEY}&session_id=${tmdb_sessoin}`
     );
     const res = await req.json();
     const userData = { image: res.avatar, name: res.username, id: res.id };
@@ -177,7 +179,10 @@ export default function Navbar() {
                 {session.status == "authenticated" && (
                   <>
                     <>
-                      <div className="absolute right-5 z-10 top-20 bg-gray-700 rounded-lg h-92 py-5 px-3 hover:shadow-white text-white w-64">
+                      <div
+                        style={{ zIndex: 15 }}
+                        className="absolute right-5 top-20 bg-gray-700 rounded-lg h-92 py-5 px-3 hover:shadow-white text-white w-64"
+                      >
                         <div className="user_info px-3">
                           <div className="flex justify-between items-center">
                             <img
@@ -207,22 +212,28 @@ export default function Navbar() {
                           <small>{session.data.user.email}</small>
                         </div>
 
-                        <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4 rounded-lg px-3  items-center">
-                          <FontAwesomeIcon icon={faHeart} />
-                          <h4>Saved Movies</h4>
-                        </div>
-                        <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4 rounded-lg px-3  items-center">
-                          <FontAwesomeIcon icon={faMessage} />
-                          <h4>Send FeedBack</h4>
-                        </div>
+                        <Link href={"/watchlist"}>
+                          <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4 rounded-lg px-3  items-center">
+                            <FontAwesomeIcon icon={faBookmark} />
+                            <h4>Saved To Watchlist</h4>
+                          </div>
+                        </Link>
+                        <Link href={"/favorite"}>
+                          <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4 rounded-lg px-3  items-center">
+                            <FontAwesomeIcon icon={faStar} />
+                            <h4>Saved To Favorite</h4>
+                          </div>
+                        </Link>
                         <div className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4 px-3  items-center rounded-lg">
                           <FontAwesomeIcon icon={faCircleQuestion} />
-                          <h4>Support</h4>
+                          <h4>Support from us</h4>
                         </div>
                         <div
                           onClick={() => {
                             cookies.remove("tmdb_session");
-                            signOut("google");
+                            // session.status = "unauthenticated";
+                            // session.data = null;
+                            signOut();
                           }}
                           className="flex cursor-pointer hover:bg-slate-800 gap-3 py-4  px-3  items-center rounded-lg"
                         >
