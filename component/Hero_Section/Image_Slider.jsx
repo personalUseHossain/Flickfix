@@ -18,7 +18,7 @@ export default function Image_Slider() {
   const [upComingMovies, setUpcomingMovies] = useState([]);
   async function fetchData() {
     const req = await fetch(
-      "https://api.themoviedb.org/3/movie/upcoming?api_key=db9fc15e4392ee900f12fcb5246c12bf"
+      `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
     const res = await req.json();
     setUpcomingMovies(res.results);
