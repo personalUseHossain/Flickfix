@@ -7,6 +7,7 @@ import { MyContext } from "../layout";
 import sorryImage from "@/public/Image/sorry.png";
 import { useSession } from "next-auth/react";
 import Cookies from "universal-cookie";
+import { Key } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
@@ -69,14 +70,22 @@ export default function Page() {
           {movie &&
             movie.map((movie) => {
               return (
-                <MovieSingleCard details={movie.media_type} movie={movie} />
+                <MovieSingleCard
+                  Key={movie.id}
+                  details={movie.media_type}
+                  movie={movie}
+                />
               );
             })}
 
           {tv &&
             tv.map((movie) => {
               return (
-                <MovieSingleCard details={movie.media_type} movie={movie} />
+                <MovieSingleCard
+                  Key={movie.id}
+                  details={movie.media_type}
+                  movie={movie}
+                />
               );
             })}
           {tv && tv.length < 1 && movie && movie.length < 1 && (

@@ -8,6 +8,7 @@ import sorryImage from "@/public/Image/sorry.png";
 import { useSession } from "next-auth/react";
 import Cookies from "universal-cookie";
 import { useRouter } from "next/navigation";
+import { Key } from "react";
 
 export default function Page() {
   const [movie, setMovie] = useState([]);
@@ -70,14 +71,22 @@ export default function Page() {
           {movie &&
             movie.map((movie) => {
               return (
-                <MovieSingleCard details={movie.media_type} movie={movie} />
+                <MovieSingleCard
+                  Key={movie.id}
+                  details={movie.media_type}
+                  movie={movie}
+                />
               );
             })}
 
           {tv &&
             tv.map((movie) => {
               return (
-                <MovieSingleCard details={movie.media_type} movie={movie} />
+                <MovieSingleCard
+                  Key={movie.id}
+                  details={movie.media_type}
+                  movie={movie}
+                />
               );
             })}
           {tv && tv.length < 1 && movie && movie.length < 1 && (
