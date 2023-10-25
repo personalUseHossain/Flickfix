@@ -3,6 +3,7 @@ import MovieSingleCard from "@/component/Hero_Section/MovieSingleCard";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import "@/public/CSS/Trending.css";
 import { MyContext } from "../layout";
+import Movie_And_Tv_show from "@/component/Skeleton_Loading/Movie_And_Tv_show";
 
 export default function Page() {
   const [trending, setTrending] = useState([]);
@@ -69,14 +70,32 @@ export default function Page() {
           "trending relative z-10 p-10 bg-slate-950 text-white"
         }
       >
-        {trending &&
+        {trending.length > 1 ? (
           trending.map((movie) => {
             return (
               <>
                 <MovieSingleCard details={movie.media_type} movie={movie} />
               </>
             );
-          })}
+          })
+        ) : (
+          <>
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+            <Movie_And_Tv_show />
+          </>
+        )}
       </div>
     </>
   );
