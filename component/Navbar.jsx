@@ -6,7 +6,6 @@ import { signOut, useSession } from "next-auth/react";
 
 //image
 import Logo from "@/public/Image/logo.png";
-import User from "@/public/Image/User.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
