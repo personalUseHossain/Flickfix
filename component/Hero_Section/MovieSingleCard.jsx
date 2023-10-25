@@ -2,14 +2,12 @@ import React from "react";
 import Image from "next/image";
 import IMDB_LOGO from "@/public/Image/imdb.png";
 import Link from "next/link";
+// import Skeleton from "react-loading-skeleton";
+// import "react-loading-skeleton/dist/skeleton.css";
 
 export default function PopularSingleGameCard(props) {
   return (
     <Link
-      // style={{
-      //   transform: `translateX(-${props.transform}%)`,
-      //   transition: ".2s",
-      // }}
       href={
         props.details == "tv"
           ? `/series/details/${props.movie.id}?details=${props.details}`
