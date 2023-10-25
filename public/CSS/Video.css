@@ -3,6 +3,7 @@
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
     place-items: center;
     gap: 1rem;
+    width: 100vw;
     background: rgb(45, 49, 54);
     padding: 2rem;
     min-height: 50vh;
