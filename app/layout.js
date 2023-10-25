@@ -2,11 +2,14 @@
 import Navbar from "@/component/Navbar";
 import Sidebar from "@/component/Sidebar";
 import '@/app/globals.css'
-import { createContext, useEffect, useRef, useState } from "react"
+import { createContext, useState } from "react"
 import Footer from "@/component/Footer";
 import AuthProvider from "@/component/AuthProvider";
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { config } from '@fortawesome/fontawesome-svg-core';
+import { SkeletonTheme } from "react-loading-skeleton";
+
+
 config.autoAddCss = false;
 
 
@@ -40,10 +43,12 @@ export default function RootLayout({ children }) {
 
         <AuthProvider>
           <MyContext.Provider value={{ isSideBarOpen, setSideBarOpen }}>
-            <Navbar />
-            <Sidebar />
-            {children}
-            <Footer />
+            <SkeletonTheme baseColor="#202020" highlightColor="#616E78">
+              <Navbar />
+              <Sidebar />
+              {children}
+              <Footer />
+            </SkeletonTheme>
           </MyContext.Provider>
         </AuthProvider>
 
