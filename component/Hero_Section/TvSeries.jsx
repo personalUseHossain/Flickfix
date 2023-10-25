@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import MovieSingleCard from "./MovieSingleCard";
 import "@/public/CSS/PopularGames.css";
+import SingleMovie from "../Skeleton_Loading/SingleMovieCard";
 
 export default function TvSeries() {
   const [tv_series_movies, set_tv_series_movies] = useState([]);
@@ -19,13 +20,25 @@ export default function TvSeries() {
     <>
       <h1 className="text-6xl m-5">Tv Series</h1>
       <div className="popular_games-container my-10 mx-5 ">
-        {tv_series_movies.map((movie) => {
-          return (
-            <>
-              <MovieSingleCard details={"tv"} movie={movie} />
-            </>
-          );
-        })}
+        {tv_series_movies.length > 1 ? (
+          tv_series_movies.map((movie) => {
+            return (
+              <>
+                <MovieSingleCard details={"tv"} movie={movie} />
+              </>
+            );
+          })
+        ) : (
+          <>
+            <SingleMovie />
+            <SingleMovie />
+            <SingleMovie />
+            <SingleMovie />
+            <SingleMovie />
+            <SingleMovie />
+            <SingleMovie />
+          </>
+        )}
       </div>
     </>
   );

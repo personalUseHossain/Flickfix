@@ -4,6 +4,7 @@ import MovieSingleCard from "./MovieSingleCard";
 import "@/public/CSS/PopularGames.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import SingleMovie from "../Skeleton_Loading/SingleMovieCard";
 
 export default function PopularGame() {
   const [popular_movies, set_popular_movies] = useState([]);
@@ -31,17 +32,29 @@ export default function PopularGame() {
       /> */}
       <div>
         <div className="popular_games-container my-10 mx-5 relative">
-          {popular_movies.map((movie) => {
-            return (
-              <>
-                <MovieSingleCard
-                  transform={transform}
-                  details={"movie"}
-                  movie={movie}
-                />
-              </>
-            );
-          })}
+          {popular_movies.length > 1 ? (
+            popular_movies.map((movie) => {
+              return (
+                <>
+                  <MovieSingleCard
+                    transform={transform}
+                    details={"movie"}
+                    movie={movie}
+                  />
+                </>
+              );
+            })
+          ) : (
+            <>
+              <SingleMovie />
+              <SingleMovie />
+              <SingleMovie />
+              <SingleMovie />
+              <SingleMovie />
+              <SingleMovie />
+              <SingleMovie />
+            </>
+          )}
         </div>
       </div>
       {/* <FontAwesomeIcon

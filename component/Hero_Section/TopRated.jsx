@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import MovieSingleCard from "./MovieSingleCard";
 import "@/public/CSS/PopularGames.css";
+import SingleMovie from "../Skeleton_Loading/SingleMovieCard";
 
 export default function TopRated() {
   const [topRated_movies, set_topRated_movies] = useState([]);
@@ -20,13 +21,25 @@ export default function TopRated() {
       <h1 className="text-6xl m-5">Top Rated</h1>
 
       <div className="popular_games-container my-10 mx-5 ">
-        {topRated_movies.map((movie) => {
-          return (
-            <>
-              <MovieSingleCard details={"tv"} movie={movie} />
-            </>
-          );
-        })}
+        {topRated_movies.length > 1 ? (
+          topRated_movies.map((movie) => {
+            return (
+              <>
+                <MovieSingleCard details={"tv"} movie={movie} />
+              </>
+            );
+          })
+        ) : (
+          <>
+            <SingleMovie />
+            <SingleMovie />
+            <SingleMovie />
+            <SingleMovie />
+            <SingleMovie />
+            <SingleMovie />
+            <SingleMovie />
+          </>
+        )}
       </div>
     </>
   );
