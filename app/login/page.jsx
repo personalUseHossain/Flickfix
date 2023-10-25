@@ -155,7 +155,7 @@ export default function Page() {
               <h1 className="text-white text-2xl">Continue with Github</h1>
             </button>
             <p className="text-white mt-10">
-              To Give Review, Add to watchlist/Favorite
+              To Add to watchlist or Favorite
             </p>
             <button
               className="flex items-center gap-6 bg-black px-7 py-2 rounded-lg"
