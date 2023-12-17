@@ -1,7 +1,8 @@
 import { Html, Head, Main, NextScript } from 'next/document';
 import Script from 'next/script';
 
-export default function Document() {
+// Rename the component to avoid naming conflicts
+function MyCustomDocument() {
     return (
         <Html lang="en">
             <Head>
@@ -19,3 +20,5 @@ export default function Document() {
         </Html>
     );
 }
+
+export default MyCustomDocument;
